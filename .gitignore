@@ -1,0 +1,18 @@
+# Local .terraform directories created by terraform init
+**/.terraform/*
+
+# Terraform state files — never commit state
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Terraform plan output files
+*.tfplan
+
+# Sensitive backend config overrides (use -backend-config flag instead)
+backend.local.tfvars
+
+# .terraform.lock.hcl is intentionally committed (pins provider versions)
