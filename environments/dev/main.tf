@@ -19,3 +19,17 @@ module "network" {
   private_subnet_cidrs = var.private_subnet_cidrs
   cost_center          = var.cost_center
 }
+
+module "eks" {
+  source = "../../modules/eks"
+
+  environment        = var.environment
+  vpc_id             = module.network.vpc_id
+  private_subnet_ids = module.network.private_subnet_ids
+  admin_role_arn     = var.eks_admin_role_arn
+  cluster_version    = var.eks_cluster_version
+  node_instance_type = var.eks_node_instance_type
+  node_desired_size  = var.eks_node_desired_size
+  node_min_size      = var.eks_node_min_size
+  node_max_size      = var.eks_node_max_size
+}
