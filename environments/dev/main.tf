@@ -34,6 +34,61 @@ module "oidc" {
   }
 }
 
+resource "aws_iam_policy" "gha_shipments_api" {
+  name = "gha-routebox-shipments-api-dev"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+        ]
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["eks:DescribeCluster"]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "gha_shipments_api" {
+  name = "gha-routebox-shipments-api-dev"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Federated = module.oidc.provider_arn }
+      Action    = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringLike = {
+          "token.actions.githubusercontent.com:sub" = "repo:MironenkoVlad/routebox-shipments-api:ref:refs/heads/main"
+        }
+        StringEquals = {
+          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+        }
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "gha_shipments_api" {
+  role       = aws_iam_role.gha_shipments_api.name
+  policy_arn = aws_iam_policy.gha_shipments_api.arn
+}
+
 module "rds" {
   source = "../../modules/rds"
 
