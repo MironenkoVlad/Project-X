@@ -20,6 +20,17 @@ module "network" {
   cost_center          = var.cost_center
 }
 
+module "ecr" {
+  source = "../../modules/ecr"
+
+  environment = var.environment
+  services = [
+    "ops-console",
+    "route-optimizer",
+    "tracking-events",
+  ]
+}
+
 module "eks" {
   source = "../../modules/eks"
 
