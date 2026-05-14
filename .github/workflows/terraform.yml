@@ -9,6 +9,10 @@ on:
 env:
   TF_WORKING_DIR: environments/dev
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   terraform:
     name: Plan & Apply
@@ -28,9 +32,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          role-to-assume: arn:aws:iam::957424402576:role/gha-routebox-infra-tf-dev
           aws-region: us-east-1
 
       - name: Terraform Init

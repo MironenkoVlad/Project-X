@@ -20,6 +20,20 @@ module "network" {
   cost_center          = var.cost_center
 }
 
+module "oidc" {
+  source = "../../modules/oidc"
+
+  github_org = "MironenkoVlad"
+
+  roles = {
+    "gha-routebox-infra-tf-dev" = {
+      repo        = "Project-X"
+      branch      = "main"
+      policy_arns = ["arn:aws:iam::aws:policy/AdministratorAccess"]
+    }
+  }
+}
+
 module "rds" {
   source = "../../modules/rds"
 
