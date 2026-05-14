@@ -54,6 +54,10 @@ output "jenkins_security_group_id" {
   value = module.network.jenkins_security_group_id
 }
 
+output "rds_endpoint" {
+  value = module.rds.db_endpoint
+}
+
 output "ecr_repository_urls" {
   value = module.ecr.repository_urls
 }

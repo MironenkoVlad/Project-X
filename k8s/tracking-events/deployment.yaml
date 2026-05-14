@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tracking-events
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracking-events
+  template:
+    metadata:
+      labels:
+        app: tracking-events
+    spec:
+      containers:
+        - name: tracking-events
+          image: 957424402576.dkr.ecr.us-east-1.amazonaws.com/routebox-dev/tracking-events:2251c21-amd64
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: tracking-events
+            - secretRef:
+                name: tracking-events
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"

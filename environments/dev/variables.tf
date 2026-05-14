@@ -24,6 +24,26 @@ variable "cost_center" {
   default     = "platform"
 }
 
+variable "rds_instance_class" {
+  type    = string
+  default = "db.t3.small"
+}
+
+variable "rds_allocated_storage" {
+  type    = number
+  default = 20
+}
+
+variable "rds_master_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "rds_backup_retention_days" {
+  type    = number
+  default = 1
+}
+
 variable "eks_admin_role_arn" {
   type        = string
   description = "IAM role ARN granted cluster-admin access via EKS access entry."

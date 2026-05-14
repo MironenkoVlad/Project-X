@@ -20,6 +20,19 @@ module "network" {
   cost_center          = var.cost_center
 }
 
+module "rds" {
+  source = "../../modules/rds"
+
+  environment            = var.environment
+  private_subnet_ids     = module.network.private_subnet_ids
+  rds_security_group_id  = module.network.rds_security_group_id
+  db_instance_class      = var.rds_instance_class
+  db_allocated_storage   = var.rds_allocated_storage
+  db_master_password     = var.rds_master_password
+  backup_retention_days  = var.rds_backup_retention_days
+  skip_final_snapshot    = true
+}
+
 module "ecr" {
   source = "../../modules/ecr"
 
