@@ -74,7 +74,7 @@ resource "aws_iam_role" "gha_shipments_api" {
       Action    = "sts:AssumeRoleWithWebIdentity"
       Condition = {
         StringLike = {
-          "token.actions.githubusercontent.com:sub" = "repo:MironenkoVlad/routebox-shipments-api:ref:refs/heads/main"
+          "token.actions.githubusercontent.com:sub" = "repo:MironenkoVlad/Project-X:ref:refs/heads/main"
         }
         StringEquals = {
           "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
