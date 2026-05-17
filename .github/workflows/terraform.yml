@@ -6,21 +6,17 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  TF_WORKING_DIR: environments/dev
-
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  terraform:
-    name: Plan & Apply
+  dev:
+    name: Dev — Plan & Apply
     runs-on: ubuntu-latest
-
     defaults:
       run:
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        working-directory: environments/dev
 
     steps:
       - uses: actions/checkout@v4
@@ -45,4 +41,34 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -var-file=dev.tfvars
 
-        
+  prod:
+    name: Prod — Plan & Apply
+    runs-on: ubuntu-latest
+    environment: prod
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: dev
+    defaults:
+      run:
+        working-directory: environments/prod
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.10.0"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -var-file=prod.tfvars
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var-file=prod.tfvars

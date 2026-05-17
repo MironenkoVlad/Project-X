@@ -10,6 +10,20 @@ provider "aws" {
   }
 }
 
+module "oidc" {
+  source = "../../modules/oidc"
+
+  github_org = "MironenkoVlad"
+
+  roles = {
+    "gha-routebox-infra-tf-prod" = {
+      repo        = "Project-X"
+      branch      = "main"
+      policy_arns = ["arn:aws:iam::aws:policy/AdministratorAccess"]
+    }
+  }
+}
+
 module "network" {
   source = "../../network"
 
