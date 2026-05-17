@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - routebox-tracking-events/**
-      - k8s/tracking-events/**
+      - helm/tracking-events/**
 
 permissions:
   id-token: write
@@ -41,16 +41,15 @@ jobs:
             routebox-tracking-events/
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
 
-      - name: Update image tag in deployment
-        run: |
-          sed -i "s|image:.*|image: $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}|" \
-            k8s/tracking-events/deployment.yaml
-
       - name: Configure kubeconfig
         run: |
           aws eks update-kubeconfig \
             --region ${{ env.AWS_REGION }} \
             --name routebox-dev
 
-      - name: Deploy
-        run: kubectl apply -f k8s/tracking-events/
+      - name: Deploy via Helm
+        run: |
+          helm upgrade --install tracking-events helm/tracking-events/ \
+            --namespace app \
+            --create-namespace \
+            --set image.tag=${{ github.sha }}

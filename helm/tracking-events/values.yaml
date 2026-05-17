@@ -1,0 +1,33 @@
+replicaCount: 1
+
+image:
+  repository: 957424402576.dkr.ecr.us-east-1.amazonaws.com/routebox-dev/tracking-events
+  tag: latest
+  pullPolicy: IfNotPresent
+
+namespace: app
+
+service:
+  port: 80
+  targetPort: 8080
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "64Mi"
+  limits:
+    cpu: "500m"
+    memory: "128Mi"
+
+config:
+  PORT: "8080"
+  LOG_LEVEL: "info"
+  AWS_REGION: "us-east-1"
+
+secrets:
+  DATABASE_URL: "postgres://routebox_admin:placeholder@placeholder.us-east-1.rds.amazonaws.com:5432/routebox"
+  WEBHOOK_SECRET: "placeholder"
+  FEDEX_API_KEY: "placeholder"
+  UPS_API_KEY: "placeholder"
+  DHL_API_KEY: "placeholder"
+  USPS_USER_ID: "placeholder"
