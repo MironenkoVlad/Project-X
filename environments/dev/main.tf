@@ -127,5 +127,5 @@ module "eks" {
   node_max_size      = var.eks_node_max_size
 }
 
-# ZDAPROVA ARTEM 
+# ZDAPROVA ARTEM Epta
 
