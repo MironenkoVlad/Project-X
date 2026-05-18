@@ -126,3 +126,6 @@ module "eks" {
   node_min_size      = var.eks_node_min_size
   node_max_size      = var.eks_node_max_size
 }
+
+# ZDAPROVA ARTEM 
+
